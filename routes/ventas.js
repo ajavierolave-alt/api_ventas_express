@@ -1,9 +1,9 @@
-import {Routers} from 'express';
+import {Router} from 'express';
 import { pool } from '../db.js';
 
 
 
-const router = Routers();
+const router = Router();
 
 
 
