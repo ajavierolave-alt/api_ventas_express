@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación del API</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Documentación del API de Ventas</h1>
+        <p>Este documento proporciona información sobre cómo consumir el API de ventas.</p>
+    </header>
+    <main>
+        <section>
+            <h2>Base URL</h2>
+            <p>La URL base para acceder al API es: <code>http://localhost:3000/api</code></p>
+        </section>
+        <section>
+            <h2>Rutas Disponibles</h2>
+            <h3>1. Crear Venta</h3>
+            <p><strong>Ruta:</strong> <code>/ventas</code></p>
+            <p><strong>Método:</strong> POST</p>
+            <p><strong>Descripción:</strong> Crea una nueva venta.</p>
+            <p><strong>Parámetros:</strong></p>
+            <ul>
+                <li><code>producto</code> (string): Nombre del producto vendido.</li>
+                <li><code>cantidad</code> (integer): Cantidad vendida.</li>
+                <li><code>precio</code> (float): Precio del producto.</li>
+            </ul>
+            <p><strong>Ejemplo de solicitud:</strong></p>
+            <pre>
+{
+    "producto": "Zapatos",
+    "cantidad": 2,
+    "precio": 50.00
+}
+            </pre>
+            <p><strong>Ejemplo de respuesta:</strong></p>
+            <pre>
+{
+    "mensaje": "Venta creada exitosamente",
+    "venta": {
+        "id": 1,
+        "producto": "Zapatos",
+        "cantidad": 2,
+        "precio": 50.00
+    }
+}
+            </pre>
+
+            <h3>2. Obtener Ventas</h3>
+            <p><strong>Ruta:</strong> <code>/ventas</code></p>
+            <p><strong>Método:</strong> GET</p>
+            <p><strong>Descripción:</strong> Obtiene una lista de todas las ventas.</p>
+            <p><strong>Ejemplo de respuesta:</strong></p>
+            <pre>
+[
+    {
+        "id": 1,
+        "producto": "Zapatos",
+        "cantidad": 2,
+        "precio": 50.00
+    },
+    {
+        "id": 2,
+        "producto": "Camisa",
+        "cantidad": 1,
+        "precio": 20.00
+    }
+]
+            </pre>
+
+            <h3>3. Actualizar Venta</h3>
+            <p><strong>Ruta:</strong> <code>/ventas/:id</code></p>
+            <p><strong>Método:</strong> PUT</p>
+            <p><strong>Descripción:</strong> Actualiza una venta existente.</p>
+            <p><strong>Parámetros:</strong></p>
+            <ul>
+                <li><code>id</code> (integer): ID de la venta a actualizar.</li>
+                <li><code>producto</code> (string): Nombre del producto vendido.</li>
+                <li><code>cantidad</code> (integer): Cantidad vendida.</li>
+                <li><code>precio</code> (float): Precio del producto.</li>
+            </ul>
+            <p><strong>Ejemplo de solicitud:</strong></p>
+            <pre>
+{
+    "producto": "Zapatos",
+    "cantidad": 3,
+    "precio": 45.00
+}
+            </pre>
+            <p><strong>Ejemplo de respuesta:</strong></p>
+            <pre>
+{
+    "mensaje": "Venta actualizada exitosamente",
+    "venta": {
+        "id": 1,
+        "producto": "Zapatos",
+        "cantidad": 3,
+        "precio": 45.00
+    }
+}
+            </pre>
+
+            <h3>4. Eliminar Venta</h3>
+            <p><strong>Ruta:</strong> <code>/ventas/:id</code></p>
+            <p><strong>Método:</strong> DELETE</p>
+            <p><strong>Descripción:</strong> Elimina una venta existente.</p>
+            <p><strong>Parámetros:</strong></p>
+            <ul>
+                <li><code>id</code> (integer): ID de la venta a eliminar.</li>
+            </ul>
+            <p><strong>Ejemplo de respuesta:</strong></p>
+            <pre>
+{
+    "mensaje": "Venta eliminada exitosamente"
+}
+            </pre>
+        </section>
+    </main>
+    <footer>
+        <p>© 2023 API de Ventas. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
