@@ -5,19 +5,44 @@ import { pool } from '../db.js';
 
 const router = Router();
 
+const isPositiveInteger = (value) =>
+    Number.isSafeInteger(value) && value > 0;
+
+const isValidDate = (value) => {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        return false;
+    }
+
+    const [year, month, day] = value.split('-').map(Number);
+    if (year < 1000) {
+        return false;
+    }
+
+    const date = new Date(Date.UTC(year, month - 1, day));
+
+    return date.getUTCFullYear() === year &&
+        date.getUTCMonth() === month - 1 &&
+        date.getUTCDate() === day;
+};
+
 //3. endpoint GET: Consultar consolidado de ventas con parametro
 router.get('/consolidado', async (req, res) => {
     try {
-        const { suscursal, anio } = req.query;
+        const { sucursal, anio } = req.query;
 
-        if (!suscursal || !anio) {
+        if (
+            typeof sucursal !== 'string' ||
+            sucursal.trim() === '' ||
+            typeof anio !== 'string' ||
+            !/^\d{4}$/.test(anio)
+        ) {
             return res.status(400).json({
                 error: 'Bad Request',
-                message: 'Debe enviar ambos parametros'
+                message: 'Debe enviar una sucursal y un año válido'
             });
         }
 
-        const [rows] = await pool.query('CALL db_ventas_tech(?, ?)', [suscursal, anio]);
+        const [rows] = await pool.query('CALL db_ventas_tech(?, ?)', [sucursal.trim(), Number(anio)]);
 
         res.status(200).json({
             status: 'success',
@@ -32,7 +57,14 @@ router.get('/consolidado', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  const { id } = req.params;
+  const id = Number(req.params.id);
+
+  if (!isPositiveInteger(id)) {
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'Debe enviar un ID de venta válido'
+    });
+  }
 
   try {
     const [result] = await pool.query('CALL sp_venta_id(?)', [id]);
@@ -104,12 +136,17 @@ router.post('/detalle', async (req, res) => {
 //5. Endpoint POST: INGRESAR NUEVA VENTA
 router.post('/', async (req, res) => {
   try {
-    const { id_producto, id_cliente, cantidad, fecha_venta } = req.body;
+    const { id_producto, id_cliente, cantidad, fecha_venta } = req.body ?? {};
 
-    if (!id_producto || !id_cliente || !cantidad || !fecha_venta) {
+    if (
+      !isPositiveInteger(id_producto) ||
+      !isPositiveInteger(id_cliente) ||
+      !isPositiveInteger(cantidad) ||
+      !isValidDate(fecha_venta)
+    ) {
       return res.status(400).json({
         error: "Bad Request",
-        message: "todos los parámetros obligatorios"
+        message: "Debe enviar IDs y cantidad como enteros positivos, y una fecha válida (AAAA-MM-DD)"
       });
     }
 

@@ -1,5 +1,6 @@
 import express from "express";
 import ventasRoutes from './routes/ventas.js';
+import productosRoutes from './routes/productos.js';
 import 'dotenv/config';
 
 const app = express();
@@ -97,31 +98,52 @@ const docsHtml = `<!DOCTYPE html>
         <span class="badge">API REST</span>
         <h1>Documentación de la API de Ventas</h1>
         <p class="muted">Base URL: <strong>http://localhost:3000</strong></p>
-        <p>Esta API permite consultar ventas, consultar consolidado por sucursal y año, y registrar nuevas ventas en la base de datos.</p>
+        <p>Esta API permite consultar y registrar productos y ventas, consultar consolidado por sucursal y año, y consultar el detalle de una venta.</p>
       </header>
 
       <section class="grid">
         <article class="card">
-          <h2>1. Consultar consolidado</h2>
+          <h2>1. Consultar productos</h2>
+          <p><span class="method get">GET</span> /api/v1/productos</p>
+          <p>Devuelve todos los productos registrados.</p>
+          <pre>GET /api/v1/productos</pre>
+        </article>
+
+        <article class="card">
+          <h2>2. Registrar nuevo producto</h2>
+          <p><span class="method post">POST</span> /api/v1/productos</p>
+          <p>Registra un producto con categoría, nombre, precio unitario y costo de proveedor. La ubicación del pasillo es opcional.</p>
+          <pre>
+{
+  "id_categoria": 1,
+  "nombre_producto": "Producto nuevo",
+  "precio_unitario": 1990,
+  "costo_proveedor": 1200,
+  "ubicacion_pasillo": "A-01"
+}</pre>
+        </article>
+
+        <article class="card">
+          <h2>3. Consultar consolidado</h2>
           <p><span class="method get">GET</span> /api/v1/ventas/consolidado</p>
           <p>Obtiene un resumen de ventas por sucursal y año.</p>
           <p><strong>Parámetros obligatorios:</strong></p>
           <ul>
-            <li><code>suscursal</code>: identificador de sucursal</li>
+            <li><code>sucursal</code>: identificador de sucursal</li>
             <li><code>anio</code>: año a consultar</li>
           </ul>
-          <pre>GET /api/v1/ventas/consolidado?suscursal=001&anio=2024</pre>
+          <pre>GET /api/v1/ventas/consolidado?sucursal=001&anio=2024</pre>
         </article>
 
         <article class="card">
-          <h2>2. Consultar venta por ID</h2>
+          <h2>4. Consultar venta por ID</h2>
           <p><span class="method get">GET</span> /api/v1/ventas/:id</p>
           <p>Devuelve la información de una venta específica.</p>
           <pre>GET /api/v1/ventas/10</pre>
         </article>
 
         <article class="card">
-          <h2>3. Registrar nueva venta</h2>
+          <h2>5. Registrar nueva venta</h2>
           <p><span class="method post">POST</span> /api/v1/ventas</p>
           <p>Registra una venta con los datos del producto, cliente, cantidad y fecha.</p>
           <pre>
@@ -134,7 +156,7 @@ const docsHtml = `<!DOCTYPE html>
         </article>
 
         <article class="card">
-          <h2>4. Consultar detalle de venta</h2>
+          <h2>6. Consultar detalle de venta</h2>
           <p><span class="method post">POST</span> /api/v1/ventas/detalle</p>
           <p>Obtiene el detalle de una venta por su identificador.</p>
           <pre>POST /api/v1/ventas/detalle?id_venta=10</pre>
@@ -173,6 +195,7 @@ app.get('/docs', (req, res) => {
 
 //2. Montamos las rutas con el prefijo /api/v1/ventas
 app.use('/api/v1/ventas', ventasRoutes);
+app.use('/api/v1/productos', productosRoutes);
 
 //3. Iniciar el servidor
 const PORT = process.env.PORT || 3000;
